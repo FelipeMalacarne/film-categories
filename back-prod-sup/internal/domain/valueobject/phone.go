@@ -18,7 +18,6 @@ func (p Phone) String() string {
 }
 
 func isValidPhone(phone string) bool {
-	// Simple regex for phone validation
 	const phoneRegex = `^\+?[1-9]\d{1,14}$`
 	re := regexp.MustCompile(phoneRegex)
 	return re.MatchString(phone)
