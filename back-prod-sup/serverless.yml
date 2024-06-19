@@ -1,0 +1,58 @@
+# "org" ensures this Service is used with the correct Serverless Framework Access Key.
+org: felipeserverless
+# "app" enables Serverless Framework Dashboard features and sharing them with other Services.
+app: back-prod-sup
+# "service" is the name of this project. This will also be added to your AWS resource names.
+service: back-prod-sup
+
+provider:
+  name: aws
+  runtime: go1.x
+  stage: dev
+  region: sa-east-1
+  versionFunctions: false
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - dynamodb:PutItem
+            - dynamodb:Scan
+          Resource:
+            - "arn:aws:dynamodb:${aws:region}:${aws:accountId}:table/products"
+
+package:
+  patterns:
+    - "!./**"
+    - ./bin/**
+
+functions:
+  insert:
+    handler: bin/InsertProduct/bootstrap
+    events:
+      - httpApi:
+          path: /products
+          method: post
+
+  list:
+    handler: bin/ListProducts/bootstrap
+    events:
+      - httpApi:
+          path: /products
+          method: get
+
+resources:
+  Resources:
+    ProductsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: products
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
