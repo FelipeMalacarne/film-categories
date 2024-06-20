@@ -7,7 +7,8 @@ service: back-prod-sup
 
 provider:
   name: aws
-  runtime: go1.x
+  runtime: provided.al2
+  architecture: arm64
   stage: dev
   region: sa-east-1
   versionFunctions: false
@@ -20,26 +21,41 @@ provider:
             - dynamodb:Scan
           Resource:
             - "arn:aws:dynamodb:${aws:region}:${aws:accountId}:table/products"
+            - "arn:aws:dynamodb:${aws:region}:${aws:accountId}:table/suppliers"
 
 package:
-  patterns:
-    - "!./**"
-    - ./bin/**
+  individually: true
+    # patterns:
+    #   - "!./**"
+    #   - ./bin/**
 
 functions:
   insert:
-    handler: bin/InsertProduct/bootstrap
+    handler: bootstrap
+    package:
+      artifact: bin/InsertProduct.zip
     events:
       - httpApi:
           path: /products
           method: post
 
   list:
-    handler: bin/ListProducts/bootstrap
+    handler: bootstrap
+    package:
+      artifact: bin/ListProducts.zip
     events:
       - httpApi:
           path: /products
           method: get
+
+  create-supplier:
+    handler: bootstrap
+    package:
+      artifact: bin/CreateSupplier.zip
+    events:
+      - httpApi:
+          path: /supplier
+          method: post
 
 resources:
   Resources:
@@ -47,6 +63,20 @@ resources:
       Type: AWS::DynamoDB::Table
       Properties:
         TableName: products
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+
+    SuppliersTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: suppliers
         AttributeDefinitions:
           - AttributeName: id
             AttributeType: S
