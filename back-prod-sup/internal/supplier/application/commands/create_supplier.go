@@ -1,4 +1,4 @@
-package command
+package commands
 
 import "github.com/felipemalacarne/back-prod-sup/internal/supplier/domain"
 

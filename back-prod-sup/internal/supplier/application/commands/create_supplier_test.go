@@ -1,4 +1,4 @@
-package command
+package commands
 
 import (
 	"testing"
@@ -33,13 +33,10 @@ func TestHandleSuccess(t *testing.T) {
 		Phone: phone,
 	}
 
-	// Set expectations
 	mockRepo.EXPECT().Create(gomock.Any()).Return(expectedSupplier, nil)
 
-	// Call the method under test
 	supplier, err := handler.Handle(command)
 
-	// Assertions
 	assert.NoError(t, err)
 	assert.Equal(t, expectedSupplier, supplier)
 }
@@ -57,12 +54,8 @@ func TestHandleFailureOnDomainCreation(t *testing.T) {
 		Phone: "1234567890",
 	}
 
-	// No expectation set on repository since creation should fail before reaching it
-
-	// Call the method under test
 	supplier, err := handler.Handle(command)
 
-	// Assertions
 	assert.Error(t, err)
 	assert.Equal(t, domain.Supplier{}, supplier)
 }

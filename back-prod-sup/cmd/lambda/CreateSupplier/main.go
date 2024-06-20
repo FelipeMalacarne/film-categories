@@ -9,12 +9,12 @@ import (
 	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
-	"github.com/felipemalacarne/back-prod-sup/internal/supplier/application/command"
+	"github.com/felipemalacarne/back-prod-sup/internal/supplier/application/commands"
 	"github.com/felipemalacarne/back-prod-sup/internal/supplier/infrastructure/persistence"
 )
 
 func LambdaHandler(ctx context.Context, request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-	var cmd command.CreateSupplierCommand
+	var cmd commands.CreateSupplierCommand
 	if err := json.Unmarshal([]byte(request.Body), &cmd); err != nil {
 		return events.APIGatewayProxyResponse{
 			StatusCode: http.StatusBadRequest,
@@ -26,7 +26,7 @@ func LambdaHandler(ctx context.Context, request events.APIGatewayProxyRequest) (
 	db := dynamodb.New(sess)
 
 	supplierRepository := persistence.NewDynamoDBSupplierRepository(db, "suppliers")
-	createSupplierHandler := command.NewCreateSupplierHandler(supplierRepository)
+	createSupplierHandler := commands.NewCreateSupplierHandler(supplierRepository)
 
 	supplier, err := createSupplierHandler.Handle(cmd)
 	if err != nil {
