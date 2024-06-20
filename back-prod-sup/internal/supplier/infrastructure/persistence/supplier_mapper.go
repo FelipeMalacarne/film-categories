@@ -4,7 +4,6 @@ import (
 	"time"
 
 	"github.com/felipemalacarne/back-prod-sup/internal/supplier/domain"
-	"github.com/felipemalacarne/back-prod-sup/internal/supplier/valueobject"
 	"github.com/google/uuid"
 )
 
@@ -21,28 +20,19 @@ func toDynamoSupplier(supplier *domain.Supplier) *dynamoSupplier {
 	return &dynamoSupplier{
 		ID:        supplier.ID.String(),
 		Name:      supplier.Name,
-		Email:     supplier.Email.String(),
-		Phone:     supplier.Phone.String(),
+		Email:     supplier.Email,
+		Phone:     supplier.Phone,
 		CreatedAt: supplier.CreatedAt.Format(time.RFC3339),
 		UpdatedAt: supplier.UpdatedAt.Format(time.RFC3339),
 	}
 }
 
 func toSupplier(ds *dynamoSupplier) *domain.Supplier {
-	email, err := valueobject.NewEmail(ds.Email)
-	if err != nil {
-		return nil
-	}
-	phone, err := valueobject.NewPhone(ds.Phone)
-	if err != nil {
-		return nil
-	}
-
 	return &domain.Supplier{
 		ID:        uuid.MustParse(ds.ID),
 		Name:      ds.Name,
-		Email:     email,
-		Phone:     phone,
+		Email:     ds.Email,
+		Phone:     ds.Phone,
 		CreatedAt: parseTime(ds.CreatedAt),
 		UpdatedAt: parseTime(ds.UpdatedAt),
 	}

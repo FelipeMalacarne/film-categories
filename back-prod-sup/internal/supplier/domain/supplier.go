@@ -1,69 +1,94 @@
 package domain
 
 import (
-	"encoding/json"
 	"errors"
+	"regexp"
 	"time"
 
-	"github.com/felipemalacarne/back-prod-sup/internal/supplier/valueobject"
 	"github.com/google/uuid"
 )
 
 type Supplier struct {
-	CreatedAt time.Time         `json:"created_at"`
-	UpdatedAt time.Time         `json:"updated_at"`
-	Name      string            `json:"name"`
-	Email     valueobject.Email `json:"email"`
-	Phone     valueobject.Phone `json:"phone"`
-	ID        uuid.UUID         `json:"id"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
+	Name      string    `json:"name"`
+	Email     string    `json:"email"`
+	Phone     string    `json:"phone"`
+	ID        uuid.UUID `json:"id"`
 }
 
 func NewSupplier(name string, email string, phone string) (*Supplier, error) {
-	validatedEmail, err := valueobject.NewEmail(email)
-	if err != nil {
-		return nil, err
-	}
-
-	validatedPhone, err := valueobject.NewPhone(phone)
-	if err != nil {
-		return nil, err
-	}
-
-	err = validateName(name)
-	if err != nil {
-		return nil, err
-	}
-
-	return &Supplier{
+    s := &Supplier{
 		ID:        uuid.New(),
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now(),
 		Name:      name,
-		Email:     validatedEmail,
-		Phone:     validatedPhone,
-	}, nil
+        Email:     email,
+        Phone:     phone,
+	}
+
+    err := s.Validate()
+    if err != nil {
+        return nil, err
+    }
+
+    return s, nil
 }
 
-func (s *Supplier) MarshalJSON() ([]byte, error) {
-	type Alias Supplier
-	return json.Marshal(&struct {
-		*Alias
-		Email string `json:"email"`
-		Phone string `json:"phone"`
-	}{
-		Email: s.Email.String(),
-		Phone: s.Phone.String(),
-		Alias: (*Alias)(s),
-	})
+func (s *Supplier) Validate() error {
+	err := s.validateName()
+	if err != nil {
+		return err
+	}
+
+	err = s.validateEmail()
+	if err != nil {
+		return err
+	}
+
+	err = s.validatePhone()
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
-func validateName(name string) error {
-	if len(name) > 100 {
+func (s *Supplier) validateName() error {
+	if len(s.Name) > 100 {
 		return errors.New("name must have at most 100 characters")
 	}
 
-	if len(name) < 3 {
+	if len(s.Name) < 3 {
 		return errors.New("name must have at least 3 characters")
+	}
+
+	return nil
+}
+
+func (s *Supplier) validateEmail() error {
+	if s.Email == "" {
+		return errors.New("email is required")
+	}
+	const emailRegex = `^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$`
+
+	re := regexp.MustCompile(emailRegex)
+	if !re.MatchString(s.Email) {
+		return errors.New("invalid email address")
+	}
+	return nil
+}
+
+func (s *Supplier) validatePhone() error {
+	if s.Phone == "" {
+		return errors.New("phone is required")
+	}
+
+	const phoneRegex = `^\+[1-9]\d{1,14}$`
+
+	re := regexp.MustCompile(phoneRegex)
+	if !re.MatchString(s.Phone) {
+		return errors.New("invalid phone number")
 	}
 
 	return nil

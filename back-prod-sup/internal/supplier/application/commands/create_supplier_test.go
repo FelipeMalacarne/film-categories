@@ -4,7 +4,6 @@ import (
 	"testing"
 
 	"github.com/felipemalacarne/back-prod-sup/internal/supplier/domain"
-	"github.com/felipemalacarne/back-prod-sup/internal/supplier/valueobject"
 	"github.com/felipemalacarne/back-prod-sup/mocks"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
@@ -20,17 +19,13 @@ func TestHandleSuccess(t *testing.T) {
 	command := CreateSupplierCommand{
 		Name:  "John Doe",
 		Email: "john@example.com",
-		Phone: "1234567890",
+		Phone: "+55549917158012",
 	}
-
-	email, _ := valueobject.NewEmail(command.Email)
-
-	phone, _ := valueobject.NewPhone(command.Phone)
 
 	expectedSupplier := domain.Supplier{
 		Name:  command.Name,
-		Email: email,
-		Phone: phone,
+		Email: command.Email,
+		Phone: command.Phone,
 	}
 
 	mockRepo.EXPECT().Create(gomock.Any()).Return(expectedSupplier, nil)

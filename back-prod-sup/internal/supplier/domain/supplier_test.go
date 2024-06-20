@@ -21,8 +21,8 @@ func TestNewSupplier(t *testing.T) {
 		t.Errorf("Supplier.Name = %v, want %v", supplier.Name, data.name)
 	}
 
-	if supplier.Email.String() != data.email {
-		t.Errorf("Supplier.Email = %v, want %v", supplier.Email.String(), data.email)
+	if supplier.Email != data.email {
+		t.Errorf("Supplier.Email = %v, want %v", supplier.Email, data.email)
 	}
 }
 

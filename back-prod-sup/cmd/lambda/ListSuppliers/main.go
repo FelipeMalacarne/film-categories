@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"encoding/json"
 	"net/http"
 
 	"github.com/aws/aws-lambda-go/events"
@@ -10,6 +9,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
 
+	"github.com/felipemalacarne/back-prod-sup/utils"
 	"github.com/felipemalacarne/back-prod-sup/internal/supplier/application/queries"
 	"github.com/felipemalacarne/back-prod-sup/internal/supplier/infrastructure/persistence"
 )
@@ -24,27 +24,10 @@ func LambdaHandler(ctx context.Context, request events.APIGatewayProxyRequest) (
 
 	suppliers, err := listSuppliersHandler.Handle(query)
 	if err != nil {
-		return events.APIGatewayProxyResponse{
-			StatusCode: http.StatusInternalServerError,
-			Body:       err.Error(),
-		}, nil
+		return utils.APIErrorResponse(http.StatusInternalServerError, err.Error()), nil
 	}
 
-	responseBody, err := json.Marshal(suppliers)
-	if err != nil {
-		return events.APIGatewayProxyResponse{
-			StatusCode: http.StatusInternalServerError,
-			Body:       err.Error(),
-		}, nil
-	}
-
-	return events.APIGatewayProxyResponse{
-		StatusCode: http.StatusOK,
-		Headers: map[string]string{
-			"Content-Type": "application/json",
-		},
-		Body: string(responseBody),
-	}, nil
+	return utils.APISuccessResponse(suppliers)
 }
 
 func main() {
