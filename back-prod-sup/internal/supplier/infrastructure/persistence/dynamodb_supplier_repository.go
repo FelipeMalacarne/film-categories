@@ -24,14 +24,14 @@ func NewDynamoDBSupplierRepository(db *dynamodb.DynamoDB, tableName string) *Dyn
 }
 
 func (r DynamoDBSupplierRepository) Create(supplier *domain.Supplier) (domain.Supplier, error) {
-	av, err := dynamodbattribute.MarshalMap(supplier)
+	av, err := dynamodbattribute.MarshalMap(toDynamoSupplier(supplier))
 	if err != nil {
 		return domain.Supplier{}, err
 	}
 
 	input := &dynamodb.PutItemInput{
+        TableName: &r.tableName,
 		Item:      av,
-		TableName: &r.tableName,
 	}
 
 	_, err = r.db.PutItem(input)

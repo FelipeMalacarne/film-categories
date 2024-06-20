@@ -18,17 +18,17 @@ func TestHandleSuccess(t *testing.T) {
 	handler := NewCreateSupplierHandler(mockRepo)
 
 	command := CreateSupplierCommand{
-		name:  "John Doe",
-		email: "john@example.com",
-		phone: "1234567890",
+		Name:  "John Doe",
+		Email: "john@example.com",
+		Phone: "1234567890",
 	}
 
-	email, _ := valueobject.NewEmail(command.email)
+	email, _ := valueobject.NewEmail(command.Email)
 
-	phone, _ := valueobject.NewPhone(command.phone)
+	phone, _ := valueobject.NewPhone(command.Phone)
 
 	expectedSupplier := domain.Supplier{
-		Name:  command.name,
+		Name:  command.Name,
 		Email: email,
 		Phone: phone,
 	}
@@ -52,9 +52,9 @@ func TestHandleFailureOnDomainCreation(t *testing.T) {
 	handler := NewCreateSupplierHandler(mockRepo)
 
 	command := CreateSupplierCommand{
-		name:  "", // invalid input to trigger domain creation failure
-		email: "john@example.com",
-		phone: "1234567890",
+		Name:  "", // invalid input to trigger domain creation failure
+		Email: "john@example.com",
+		Phone: "1234567890",
 	}
 
 	// No expectation set on repository since creation should fail before reaching it

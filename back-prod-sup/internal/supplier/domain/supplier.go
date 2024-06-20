@@ -1,6 +1,7 @@
 package domain
 
 import (
+	"encoding/json"
 	"errors"
 	"time"
 
@@ -41,6 +42,19 @@ func NewSupplier(name string, email string, phone string) (*Supplier, error) {
 		Email:     validatedEmail,
 		Phone:     validatedPhone,
 	}, nil
+}
+
+func (s *Supplier) MarshalJSON() ([]byte, error) {
+	type Alias Supplier
+	return json.Marshal(&struct {
+		*Alias
+		Email string `json:"email"`
+		Phone string `json:"phone"`
+	}{
+		Email: s.Email.String(),
+		Phone: s.Phone.String(),
+		Alias: (*Alias)(s),
+	})
 }
 
 func validateName(name string) error {
