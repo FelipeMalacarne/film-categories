@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/felipemalacarne/back-prod-sup/internal/supplier/domain"
+	"github.com/felipemalacarne/back-prod-sup/utils"
 	"github.com/google/uuid"
 )
 
@@ -33,15 +34,7 @@ func toSupplier(ds *dynamoSupplier) *domain.Supplier {
 		Name:      ds.Name,
 		Email:     ds.Email,
 		Phone:     ds.Phone,
-		CreatedAt: parseTime(ds.CreatedAt),
-		UpdatedAt: parseTime(ds.UpdatedAt),
+		CreatedAt: utils.ParseTime(ds.CreatedAt),
+		UpdatedAt: utils.ParseTime(ds.UpdatedAt),
 	}
-}
-
-func parseTime(t string) time.Time {
-	parsedTime, err := time.Parse(time.RFC3339, t)
-	if err != nil {
-		return time.Time{}
-	}
-	return parsedTime
 }
