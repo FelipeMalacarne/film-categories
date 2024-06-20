@@ -2,11 +2,17 @@
 
 build:
 	export GO111MODULE=on
-	env GOARCH=amd64 GOOS=linux go build -ldflags="-s -w" -o bin/InsertProduct/bootstrap function/InsertProduct/main.go
-	env GOARCH=amd64 GOOS=linux go build -ldflags="-s -w" -o bin/ListProducts/bootstrap function/ListProducts/main.go
+	env GOARCH=arm64 GOOS=linux go build -ldflags="-s -w" -o bin/InsertProduct/bootstrap function/InsertProduct/main.go
+	env GOARCH=arm64 GOOS=linux go build -ldflags="-s -w" -o bin/ListProducts/bootstrap function/ListProducts/main.go
+	env GOARCH=arm64 GOOS=linux go build -ldflags="-s -w" -o bin/CreateSupplier/bootstrap cmd/lambda/CreateSupplier/main.go
+
+zip:
+	zip -j bin/InsertProduct.zip bin/InsertProduct/bootstrap
+	zip -j bin/ListProducts.zip bin/ListProducts/bootstrap
+	zip -j bin/CreateSupplier.zip bin/CreateSupplier/bootstrap
 
 clean:
 	rm -rf ./bin ./vendor go.sum
 
-deploy: clean build
+deploy: build zip
 	sls deploy --verbose
