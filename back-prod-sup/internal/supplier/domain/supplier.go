@@ -18,21 +18,21 @@ type Supplier struct {
 }
 
 func NewSupplier(name string, email string, phone string) (*Supplier, error) {
-    s := &Supplier{
+	s := &Supplier{
 		ID:        uuid.New(),
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now(),
 		Name:      name,
-        Email:     email,
-        Phone:     phone,
+		Email:     email,
+		Phone:     phone,
 	}
 
-    err := s.Validate()
-    if err != nil {
-        return nil, err
-    }
+	err := s.Validate()
+	if err != nil {
+		return nil, err
+	}
 
-    return s, nil
+	return s, nil
 }
 
 func (s *Supplier) Validate() error {

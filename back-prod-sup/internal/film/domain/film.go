@@ -73,9 +73,9 @@ func (f *Film) validateDescription() error {
 }
 
 func (f *Film) validateDuration() error {
-    if f.Duration <= 0 {
-        return errors.New("duration must be greater than 0")
-    }
+	if f.Duration <= 0 {
+		return errors.New("duration must be greater than 0")
+	}
 	if f.Duration > 60000 {
 		return errors.New("duration must be less than 60000")
 	}
