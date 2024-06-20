@@ -1,10 +1,10 @@
-package supplier
+package domain
 
 import (
 	"errors"
 	"time"
 
-	"github.com/felipemalacarne/back-prod-sup/internal/domain/valueobject"
+	"github.com/felipemalacarne/back-prod-sup/internal/supplier/valueobject"
 	"github.com/google/uuid"
 )
 
@@ -17,7 +17,7 @@ type Supplier struct {
 	ID        uuid.UUID         `json:"id"`
 }
 
-func New(name string, email string, phone string) (*Supplier, error) {
+func NewSupplier(name string, email string, phone string) (*Supplier, error) {
 	validatedEmail, err := valueobject.NewEmail(email)
 	if err != nil {
 		return nil, err
