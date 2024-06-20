@@ -30,6 +30,22 @@ func NewFilm(name string, description string, duration uint16, releaseDate time.
 	}
 }
 
+func (f *Film) Update(name *string, description *string, duration *uint16, releaseDate *time.Time) {
+	if name != nil {
+		f.Name = *name
+	}
+	if description != nil {
+		f.Description = *description
+	}
+	if duration != nil {
+		f.Duration = *duration
+	}
+	if releaseDate != nil {
+		f.ReleaseDate = *releaseDate
+	}
+	f.UpdatedAt = time.Now()
+}
+
 func (f *Film) Validate() error {
 	err := f.validateName()
 	if err != nil {
