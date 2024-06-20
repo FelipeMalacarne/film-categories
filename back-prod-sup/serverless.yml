@@ -58,6 +58,15 @@ functions:
           path: /film
           method: post
 
+  list-films:
+    handler: bootstrap
+    package:
+      artifact: bin/ListFilms.zip
+    events:
+      - httpApi:
+          path: /film
+          method: get
+
 resources:
   Resources:
     SuppliersTable:

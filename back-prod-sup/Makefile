@@ -1,18 +1,24 @@
-.PHONY: build clean deploy
+.PHONY: build zip clean deploy
+
+# Directories and files
+BIN_DIR := bin
+SRC_DIR := cmd/lambda
+LAMBDA_FUNCTIONS := CreateSupplier ListSuppliers CreateFilm ListFilms
+
+# Go build settings
+GO_SETTINGS := GOARCH=arm64 GOOS=linux
+LDFLAGS := -ldflags="-s -w"
 
 build:
 	export GO111MODULE=on
-	env GOARCH=arm64 GOOS=linux go build -ldflags="-s -w" -o bin/CreateSupplier/bootstrap cmd/lambda/CreateSupplier/main.go
-	env GOARCH=arm64 GOOS=linux go build -ldflags="-s -w" -o bin/ListSuppliers/bootstrap cmd/lambda/ListSuppliers/main.go
-	env GOARCH=arm64 GOOS=linux go build -ldflags="-s -w" -o bin/CreateFilm/bootstrap cmd/lambda/CreateFilm/main.go
+	@for function in $(LAMBDA_FUNCTIONS); do \
+		env $(GO_SETTINGS) go build $(LDFLAGS) -o $(BIN_DIR)/$$function/bootstrap $(SRC_DIR)/$$function/main.go; \
+	done
 
 zip:
-	zip -j bin/CreateSupplier.zip bin/CreateSupplier/bootstrap
-	zip -j bin/ListSuppliers.zip bin/ListSuppliers/bootstrap
-	zip -j bin/CreateFilm.zip bin/CreateFilm/bootstrap
-
-clean:
-	rm -rf ./bin ./vendor go.sum
+	@for function in $(LAMBDA_FUNCTIONS); do \
+		zip -j $(BIN_DIR)/$$function.zip $(BIN_DIR)/$$function/bootstrap; \
+	done
 
 deploy: build zip
 	sls deploy --verbose
