@@ -67,8 +67,8 @@ func (r *DynamoDBSupplierRepository) FindAll() ([]domain.Supplier, error) {
 	return suppliers, nil
 }
 
-func (r DynamoDBSupplierRepository) FindByID(id uuid.UUID) (domain.Supplier, error) {
-	keyCond := expression.Key("ID").Equal(expression.Value(id.String()))
+func (r *DynamoDBSupplierRepository) FindByID(id uuid.UUID) (domain.Supplier, error) {
+	keyCond := expression.Key("id").Equal(expression.Value(id.String()))
 
 	expr, err := expression.NewBuilder().WithKeyCondition(keyCond).Build()
 	if err != nil {
@@ -91,24 +91,24 @@ func (r DynamoDBSupplierRepository) FindByID(id uuid.UUID) (domain.Supplier, err
 		return domain.Supplier{}, errors.New("supplier not found")
 	}
 
-	var supplier domain.Supplier
-	err = dynamodbattribute.UnmarshalMap(result.Items[0], &supplier)
+	var ds dynamoSupplier
+	err = dynamodbattribute.UnmarshalMap(result.Items[0], &ds)
 	if err != nil {
 		return domain.Supplier{}, err
 	}
 
-	return supplier, nil
+	return *toSupplier(&ds), nil
 }
 
-func (r DynamoDBSupplierRepository) Update(supplier *domain.Supplier) (domain.Supplier, error) {
-	av, err := dynamodbattribute.MarshalMap(supplier)
+func (r *DynamoDBSupplierRepository) Update(supplier *domain.Supplier) (domain.Supplier, error) {
+	av, err := dynamodbattribute.MarshalMap(toDynamoSupplier(supplier))
 	if err != nil {
 		return domain.Supplier{}, err
 	}
 
 	input := &dynamodb.PutItemInput{
-		Item:      av,
 		TableName: &r.tableName,
+		Item:      av,
 	}
 
 	_, err = r.db.PutItem(input)
@@ -119,9 +119,9 @@ func (r DynamoDBSupplierRepository) Update(supplier *domain.Supplier) (domain.Su
 	return *supplier, nil
 }
 
-func (r DynamoDBSupplierRepository) Delete(id uuid.UUID) error {
+func (r *DynamoDBSupplierRepository) Delete(id uuid.UUID) error {
 	key := map[string]*dynamodb.AttributeValue{
-		"ID": {
+		"id": {
 			S: aws.String(id.String()),
 		},
 	}
