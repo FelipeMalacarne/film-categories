@@ -11,6 +11,7 @@ zip:
 	zip -j bin/InsertProduct.zip bin/InsertProduct/bootstrap
 	zip -j bin/ListProducts.zip bin/ListProducts/bootstrap
 	zip -j bin/CreateSupplier.zip bin/CreateSupplier/bootstrap
+	zip -j bin/ListSuppliers.zip bin/ListSuppliers/bootstrap
 
 clean:
 	rm -rf ./bin ./vendor go.sum

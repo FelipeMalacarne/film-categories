@@ -23,14 +23,14 @@ func NewDynamoDBSupplierRepository(db *dynamodb.DynamoDB, tableName string) *Dyn
 	}
 }
 
-func (r DynamoDBSupplierRepository) Create(supplier *domain.Supplier) (domain.Supplier, error) {
+func (r *DynamoDBSupplierRepository) Create(supplier *domain.Supplier) (domain.Supplier, error) {
 	av, err := dynamodbattribute.MarshalMap(toDynamoSupplier(supplier))
 	if err != nil {
 		return domain.Supplier{}, err
 	}
 
 	input := &dynamodb.PutItemInput{
-        TableName: &r.tableName,
+		TableName: &r.tableName,
 		Item:      av,
 	}
 
@@ -42,7 +42,7 @@ func (r DynamoDBSupplierRepository) Create(supplier *domain.Supplier) (domain.Su
 	return *supplier, nil
 }
 
-func (r DynamoDBSupplierRepository) FindAll() ([]domain.Supplier, error) {
+func (r *DynamoDBSupplierRepository) FindAll() ([]domain.Supplier, error) {
 	scanInput := &dynamodb.ScanInput{
 		TableName: &r.tableName,
 	}
@@ -52,10 +52,16 @@ func (r DynamoDBSupplierRepository) FindAll() ([]domain.Supplier, error) {
 		return nil, err
 	}
 
-	var suppliers []domain.Supplier
-	err = dynamodbattribute.UnmarshalListOfMaps(result.Items, &suppliers)
+	var dynamoSuppliers []dynamoSupplier
+	err = dynamodbattribute.UnmarshalListOfMaps(result.Items, &dynamoSuppliers)
 	if err != nil {
 		return nil, err
+	}
+
+	var suppliers []domain.Supplier
+	for _, ds := range dynamoSuppliers {
+		supplier := toSupplier(&ds)
+		suppliers = append(suppliers, *supplier)
 	}
 
 	return suppliers, nil

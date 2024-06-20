@@ -61,7 +61,7 @@ functions:
   list-supplier:
     handler: bootstrap
     package:
-      artifact: bin/ListSupplier.zip
+      artifact: bin/ListSuppliers.zip
     events:
       - httpApi:
           path: /supplier
