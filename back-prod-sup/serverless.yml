@@ -20,8 +20,8 @@ provider:
             - dynamodb:PutItem
             - dynamodb:Scan
           Resource:
-            - "arn:aws:dynamodb:${aws:region}:${aws:accountId}:table/products"
             - "arn:aws:dynamodb:${aws:region}:${aws:accountId}:table/suppliers"
+            - "arn:aws:dynamodb:${aws:region}:${aws:accountId}:table/films"
 
 package:
   individually:
@@ -31,24 +31,6 @@ package:
     #   - ./bin/**
 
 functions:
-  insert:
-    handler: bootstrap
-    package:
-      artifact: bin/InsertProduct.zip
-    events:
-      - httpApi:
-          path: /products
-          method: post
-
-  list:
-    handler: bootstrap
-    package:
-      artifact: bin/ListProducts.zip
-    events:
-      - httpApi:
-          path: /products
-          method: get
-
   create-supplier:
     handler: bootstrap
     package:
@@ -67,12 +49,21 @@ functions:
           path: /supplier
           method: get
 
+  create-film:
+    handler: bootstrap
+    package:
+      artifact: bin/CreateFilm.zip
+    events:
+      - httpApi:
+          path: /film
+          method: post
+
 resources:
   Resources:
-    ProductsTable:
+    SuppliersTable:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: products
+        TableName: suppliers
         AttributeDefinitions:
           - AttributeName: id
             AttributeType: S
@@ -83,10 +74,10 @@ resources:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
 
-    SuppliersTable:
+    FilmsTable:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: suppliers
+        TableName: films
         AttributeDefinitions:
           - AttributeName: id
             AttributeType: S

@@ -4,10 +4,12 @@ build:
 	export GO111MODULE=on
 	env GOARCH=arm64 GOOS=linux go build -ldflags="-s -w" -o bin/CreateSupplier/bootstrap cmd/lambda/CreateSupplier/main.go
 	env GOARCH=arm64 GOOS=linux go build -ldflags="-s -w" -o bin/ListSuppliers/bootstrap cmd/lambda/ListSuppliers/main.go
+	env GOARCH=arm64 GOOS=linux go build -ldflags="-s -w" -o bin/CreateFilm/bootstrap cmd/lambda/CreateFilm/main.go
 
 zip:
 	zip -j bin/CreateSupplier.zip bin/CreateSupplier/bootstrap
 	zip -j bin/ListSuppliers.zip bin/ListSuppliers/bootstrap
+	zip -j bin/CreateFilm.zip bin/CreateFilm/bootstrap
 
 clean:
 	rm -rf ./bin ./vendor go.sum
