@@ -24,7 +24,8 @@ provider:
             - "arn:aws:dynamodb:${aws:region}:${aws:accountId}:table/suppliers"
 
 package:
-  individually: true
+  individually:
+    true
     # patterns:
     #   - "!./**"
     #   - ./bin/**
@@ -56,6 +57,15 @@ functions:
       - httpApi:
           path: /supplier
           method: post
+
+  list-supplier:
+    handler: bootstrap
+    package:
+      artifact: bin/ListSupplier.zip
+    events:
+      - httpApi:
+          path: /supplier
+          method: get
 
 resources:
   Resources:
