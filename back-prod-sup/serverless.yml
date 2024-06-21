@@ -17,8 +17,13 @@ provider:
       statements:
         - Effect: Allow
           Action:
-            - dynamodb:PutItem
+            - dynamodb:DescribeTable
+            - dynamodb:Query
             - dynamodb:Scan
+            - dynamodb:GetItem
+            - dynamodb:PutItem
+            - dynamodb:UpdateItem
+            - dynamodb:DeleteItem
           Resource:
             - "arn:aws:dynamodb:${aws:region}:${aws:accountId}:table/suppliers"
             - "arn:aws:dynamodb:${aws:region}:${aws:accountId}:table/films"
@@ -49,6 +54,7 @@ functions:
           path: /supplier
           method: get
 
+  ## ---------- Films ----------
   create-film:
     handler: bootstrap
     package:
@@ -66,6 +72,33 @@ functions:
       - httpApi:
           path: /film
           method: get
+
+  get-one-film:
+    handler: bootstrap
+    package:
+      artifact: bin/GetOneFilm.zip
+    events:
+      - httpApi:
+          path: /film/{id}
+          method: get
+
+  update-film:
+    handler: bootstrap
+    package:
+      artifact: bin/UpdateFilm.zip
+    events:
+      - httpApi:
+          path: /film/{id}
+          method: put
+
+  delete-film:
+    handler: bootstrap
+    package:
+      artifact: bin/DeleteFilm.zip
+    events:
+      - httpApi:
+          path: /film/{id}
+          method: delete
 
 resources:
   Resources:

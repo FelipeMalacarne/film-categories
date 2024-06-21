@@ -3,7 +3,7 @@
 # Directories and files
 BIN_DIR := bin
 SRC_DIR := cmd/lambda
-LAMBDA_FUNCTIONS := CreateSupplier ListSuppliers CreateFilm ListFilms
+LAMBDA_FUNCTIONS := $(shell find $(SRC_DIR) -mindepth 1 -maxdepth 1 -type d -exec basename {} \;)
 
 # Go build settings
 GO_SETTINGS := GOARCH=arm64 GOOS=linux

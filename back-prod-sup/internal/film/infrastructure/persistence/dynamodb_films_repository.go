@@ -1,6 +1,8 @@
 package persistence
 
 import (
+	"errors"
+
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
 	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute"
@@ -67,10 +69,10 @@ func (r *DynamoDBFilmRepository) FindByID(id uuid.UUID) (domain.Film, error) {
 	}
 	result, err := r.db.GetItem(input)
 	if err != nil {
-		return domain.Film{}, err
+        return domain.Film{}, err
 	}
 	if result.Item == nil {
-		return domain.Film{}, nil
+        return domain.Film{}, errors.New("film not found")
 	}
 	var df dynamoFilm
 	err = dynamodbattribute.UnmarshalMap(result.Item, &df)

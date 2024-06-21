@@ -13,6 +13,15 @@ func APISuccessResponse(data interface{}) (events.APIGatewayProxyResponse, error
 		return APIErrorResponse(http.StatusInternalServerError, "Failed to marshal response"), nil
 	}
 
+	if data == nil {
+		return events.APIGatewayProxyResponse{
+			StatusCode: http.StatusNoContent,
+			Headers: map[string]string{
+				"Content-Type": "application/json",
+			},
+		}, nil
+	}
+
 	return events.APIGatewayProxyResponse{
 		StatusCode: http.StatusOK,
 		Headers: map[string]string{
@@ -26,7 +35,6 @@ func APIErrorResponse(status int, message string) events.APIGatewayProxyResponse
 	body, err := json.Marshal(map[string]string{
 		"message": message,
 	})
-
 	if err != nil {
 		return events.APIGatewayProxyResponse{
 			StatusCode: http.StatusInternalServerError,
