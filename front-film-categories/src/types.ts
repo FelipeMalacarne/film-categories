@@ -1,9 +1,10 @@
 export interface Film {
   id: string;
   name: string;
+  author: string;
   description: string;
   duration: number;
-  release_date: string;
+  release_date: Date;
   created_at: Date;
   updated_at: Date;
 }

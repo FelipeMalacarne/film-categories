@@ -1,23 +1,36 @@
-import axios from "axios";
-import { BaseURL } from "./config";
-import { useEffect } from "react";
 import { Navbar } from "./components/navbar";
 import { Outlet } from "react-router-dom";
+import { Button } from "./components/ui/button";
+import { useFilms } from "./hooks/films";
+import { useEffect } from "react";
 
 function App() {
-  const getFilms = async () => {
-    const response = await axios.get(BaseURL + "/film");
-    const data = await response.data;
-    console.log(data);
-  };
+  const { films, createFilm, isLoading } = useFilms();
 
   useEffect(() => {
-    getFilms();
-  }, []);
+    console.log(films);
+  }, [films]);
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <>
       <main>
+        <Button
+          onClick={() =>
+            createFilm({
+              name: "New Film",
+              duration: 120,
+              description: "New Film Description",
+              author: "New Film Author",
+              release_date: new Date(),
+            })
+          }
+        >
+          Create Film
+        </Button>
         <Navbar />
         <Outlet />
       </main>
