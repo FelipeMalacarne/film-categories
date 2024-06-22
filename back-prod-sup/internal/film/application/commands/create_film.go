@@ -10,6 +10,7 @@ type CreateFilmCommand struct {
 	ReleaseDate time.Time `json:"release_date"`
 	Name        string    `json:"name"`
 	Description string    `json:"description"`
+	Author      string    `json:"author"`
 	Duration    uint16    `json:"duration"`
 }
 
@@ -22,7 +23,7 @@ func NewCreateFilmHandler(repository domain.FilmRepository) *CreateFilmHandler {
 }
 
 func (h CreateFilmHandler) Handle(command CreateFilmCommand) (domain.Film, error) {
-    film := domain.NewFilm(command.Name, command.Description, command.Duration, command.ReleaseDate)
+    film := domain.NewFilm(command.Name, command.Description, command.Duration, command.ReleaseDate, command.Author)
     err := film.Validate()
     if err != nil {
         return domain.Film{}, err

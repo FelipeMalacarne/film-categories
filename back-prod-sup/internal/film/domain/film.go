@@ -13,15 +13,17 @@ type Film struct {
 	UpdatedAt   time.Time `json:"updated_at"`
 	Name        string    `json:"name"`
 	Description string    `json:"description"`
+	Author      string    `json:"author"`
 	Duration    uint16    `json:"duration"`
 	ID          uuid.UUID `json:"id"`
 }
 
-func NewFilm(name string, description string, duration uint16, releaseDate time.Time) *Film {
+func NewFilm(name string, description string, duration uint16, releaseDate time.Time, author string) *Film {
 	now := time.Now()
 	return &Film{
 		ID:          uuid.New(),
 		Name:        name,
+		Author:      author,
 		Description: description,
 		Duration:    duration,
 		ReleaseDate: releaseDate,
@@ -102,6 +104,16 @@ func (f *Film) validateDuration() error {
 func (f *Film) validateReleaseDate() error {
 	if f.ReleaseDate.After(time.Now()) {
 		return errors.New("release date must be in the past")
+	}
+	return nil
+}
+
+func (f *Film) validateAuthor() error {
+	if len(f.Author) > 100 {
+		return errors.New("author must have at most 100 characters")
+	}
+	if len(f.Author) == 0 {
+		return errors.New("author cannot be empty")
 	}
 	return nil
 }
