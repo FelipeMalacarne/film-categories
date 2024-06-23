@@ -10,6 +10,10 @@ type CreateCategoryHandler struct {
 	repository domain.CategoryRepository
 }
 
+func NewCreateCategoryHandler(repository domain.CategoryRepository) *CreateCategoryHandler {
+	return &CreateCategoryHandler{repository}
+}
+
 func (h *CreateCategoryHandler) Handle(command CreateCategoryCommand) (domain.Category, error) {
 	category := domain.NewCategory(command.Name)
 	err := category.Validate()
