@@ -2,7 +2,6 @@ import { useFilms } from "../../hooks/films";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
@@ -11,13 +10,13 @@ import {
 import { Button } from "../../components/ui/button";
 
 export default function FilmPage() {
-  const { films, createFilm } = useFilms();
+  const { films, createFilm, updateFilm, deleteFilm } = useFilms();
 
   return (
     <div className="space-y-8 flex flex-col">
       <div className="p-8">
         <h1 className="p-4 text-2xl font-semibold border-b">Filmes</h1>
-        <Button
+        {/* <Button
           variant={"outline"}
           onClick={() =>
             createFilm({
@@ -28,37 +27,56 @@ export default function FilmPage() {
           }
         >
           Criar
-        </Button>
+        </Button> */}
       </div>
-      <div className="flex-1">
-        <Table>
-          <TableCaption>A list of your recent invoices.</TableCaption>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Name</TableHead>
-              <TableHead>Author</TableHead>
-              <TableHead>Release Date</TableHead>
-              <TableHead className="text-right">Duration</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {films ? (
-              films.map((film) => (
-                <TableRow key={film.id}>
-                  <TableCell>{film.name}</TableCell>
-                  <TableCell>{film.author}</TableCell>
-                  <TableCell>{film.release_date.toLocaleString()}</TableCell>
-                  <TableCell className="text-right">{film.duration}</TableCell>
-                </TableRow>
-              ))
-            ) : (
+      <div className="flex items-center justify-center">
+        <div className="w-full max-w-screen-md mx-auto">
+          <Table className="w-full">
+            <TableHeader>
               <TableRow>
-                <TableCell colSpan={4}>Loading...</TableCell>
+                <TableHead>Name</TableHead>
+                <TableHead>Author</TableHead>
+                <TableHead>Release Date</TableHead>
+                <TableHead>Duration</TableHead>
+                <TableHead>Actions</TableHead>
               </TableRow>
-            )}
-          </TableBody>
-        </Table>
+            </TableHeader>
+            <TableBody>
+              {films ? (
+                films.map((film) => (
+                  <TableRow key={film.id}>
+                    <TableCell>{film.name}</TableCell>
+                    <TableCell>{film.author}</TableCell>
+                    <TableCell>{film.release_date.toLocaleString()}</TableCell>
+                    <TableCell>{film.duration}</TableCell>
+                    {/* seria uma boa ideia botar svg aq */}
+                    <TableCell>
+                      <Button
+                        className="mr-2"
+                        variant="outline"
+                        onClick={() => { }}
+                      >
+                        Editar
+                      </Button>
+                      <Button
+                        variant="destructive"
+                        onClick={() => deleteFilm(film.id)}
+                      >
+                        Excluir
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={4}>Loading...</TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </div>
       </div>
     </div>
   );
+
 }
