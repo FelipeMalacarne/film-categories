@@ -37,6 +37,7 @@ provider:
           Resource:
             - "arn:aws:dynamodb:${aws:region}:${aws:accountId}:table/suppliers"
             - "arn:aws:dynamodb:${aws:region}:${aws:accountId}:table/films"
+            - "arn:aws:dynamodb:${aws:region}:${aws:accountId}:table/categories"
 
 package:
   individually:
@@ -130,6 +131,20 @@ resources:
       Type: AWS::DynamoDB::Table
       Properties:
         TableName: films
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+
+    CategoriesTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: categories
         AttributeDefinitions:
           - AttributeName: id
             AttributeType: S
