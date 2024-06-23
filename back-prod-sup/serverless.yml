@@ -111,6 +111,53 @@ functions:
           path: /film/{id}
           method: delete
 
+  ## ---------- Films ----------
+
+  create-category:
+    handler: bootstrap
+    package:
+      artifact: bin/CreateCategory.zip
+    events:
+      - httpApi:
+          path: /category
+          method: post
+
+  list-categories:
+    handler: bootstrap
+    package:
+      artifact: bin/ListCategories.zip
+    events:
+      - httpApi:
+          path: /category
+          method: get
+
+  get-one-category:
+    handler: bootstrap
+    package:
+      artifact: bin/GetOneCategory.zip
+    events:
+      - httpApi:
+          path: /category/{id}
+          method: get
+
+  update-category:
+    handler: bootstrap
+    package:
+      artifact: bin/UpdateCategory.zip
+    events:
+      - httpApi:
+          path: /category/{id}
+          method: put
+
+  delete-category:
+    handler: bootstrap
+    package:
+      artifact: bin/DeleteCategory.zip
+    events:
+      - httpApi:
+          path: /category/{id}
+          method: delete
+
 resources:
   Resources:
     SuppliersTable:
