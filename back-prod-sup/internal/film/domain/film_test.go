@@ -13,8 +13,9 @@ func TestNewFilm(t *testing.T) {
 	description := "A sci-fi adventure"
 	duration := uint16(180)
 	releaseDate := time.Date(2009, time.January, 1, 0, 0, 0, 0, time.UTC)
+    author := "James Cameron"
 
-	film := NewFilm(name, description, duration, releaseDate)
+	film := NewFilm(name, description, duration, releaseDate, author)
 
 	assert.NotNil(t, film)
 	assert.Equal(t, name, film.Name)
