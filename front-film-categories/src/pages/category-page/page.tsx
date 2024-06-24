@@ -6,7 +6,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from ".
 import { AddCategoryForm } from "./components/add-category-form";
 
 export default function CategoriesPage() {
-  const { categories, deleteCategory } = useCategories();
+  const { categories, deleteCategory, getCategories } = useCategories();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const handleDialogClose = () => {
@@ -26,7 +26,7 @@ export default function CategoriesPage() {
               <DialogTitle>Add category</DialogTitle>
             </DialogHeader>
             <DialogContent>
-              <AddCategoryForm onClose={handleDialogClose} />
+              <AddCategoryForm onClose={handleDialogClose} onRefresh={getCategories} />
             </DialogContent>
             <DialogFooter>
               <Button type="submit" form="add-category-form">Save changes</Button>

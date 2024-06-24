@@ -16,6 +16,7 @@ import {
 
 interface AddCategoryFormProps {
   onClose: () => void;
+  onRefresh: () => void;
 }
 
 const formSchema = z.object({
@@ -26,7 +27,7 @@ const formSchema = z.object({
   }),
 })
 
-export function AddCategoryForm({ onClose }: AddCategoryFormProps) {
+export function AddCategoryForm({ onClose, onRefresh }: AddCategoryFormProps) {
   const { createCategory } = useCategories();
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -38,6 +39,7 @@ export function AddCategoryForm({ onClose }: AddCategoryFormProps) {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     await createCategory(values);
+    onRefresh();
     if (onClose) { onClose() }
   }
 
