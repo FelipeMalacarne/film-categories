@@ -1,11 +1,11 @@
 import { useFilms } from "../../hooks/films";
 import { Button } from "../../components/ui/button";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "../../components/ui/dialog";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "../../components/ui/dialog";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../components/ui/table";
 import { AddFilmForm } from "./components/add-film-form";
 
 export default function FilmPage() {
-  const { films, createFilm, updateFilm, deleteFilm } = useFilms();
+  const { films, deleteFilm } = useFilms();
 
   return (
     <div className="space-y-8 flex flex-col">
