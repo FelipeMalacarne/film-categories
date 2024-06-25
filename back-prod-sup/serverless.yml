@@ -5,14 +5,6 @@ app: back-prod-sup
 # "service" is the name of this project. This will also be added to your AWS resource names.
 service: back-prod-sup
 
-stages:
-  prod:
-    observability: true # turn on observability in the "prod" Stage.
-  dev:
-    observability: true # turn on observability in the "dev" Stage.
-  default:
-    observability: false # turn off observability for all other Stages.
-
 provider:
   name: aws
   runtime: provided.al2
