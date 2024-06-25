@@ -111,6 +111,15 @@ functions:
           path: /film/{id}
           method: delete
 
+  set-film-category:
+    handler: bootstrap
+    package:
+      artifact: bin/SetFilmCategory.zip
+    events:
+      - httpApi:
+          path: /film/{film_id}/category/{category_id}
+          method: patch
+
   ## ---------- Categories ----------
 
   create-category:

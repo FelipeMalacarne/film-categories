@@ -12,11 +12,25 @@ import (
 	"github.com/felipemalacarne/back-prod-sup/internal/film/application/commands"
 	fp "github.com/felipemalacarne/back-prod-sup/internal/film/infrastructure/persistence"
 	"github.com/felipemalacarne/back-prod-sup/utils"
+	"github.com/google/uuid"
 )
 
 func main() {
 	lambda.Start(func(ctx context.Context, request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 		var cmd commands.SetFilmCategoryCommand
+
+		filmId, err := uuid.Parse(request.PathParameters["film_id"])
+		if err != nil {
+			return utils.APIErrorResponse(http.StatusBadRequest, "Invalid Film ID"), nil
+		}
+
+        categoryId, err := uuid.Parse(request.PathParameters["category_id"])
+        if err != nil {
+            return utils.APIErrorResponse(http.StatusBadRequest, "Invalid Category ID"), nil
+        }
+
+        cmd.FilmID = filmId
+        cmd.CategoryID = categoryId
 
 		db := dynamodb.New(session.Must(session.NewSession()))
 		filmRepository := fp.NewDynamoDBFilmRepository(db, "films")

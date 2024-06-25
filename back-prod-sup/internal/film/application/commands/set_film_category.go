@@ -1,6 +1,8 @@
 package commands
 
 import (
+	"errors"
+
 	cd "github.com/felipemalacarne/back-prod-sup/internal/category/domain"
 	fd "github.com/felipemalacarne/back-prod-sup/internal/film/domain"
 	"github.com/google/uuid"
@@ -24,6 +26,10 @@ func (h SetFilmCategoryHandler) Handle(command SetFilmCategoryCommand) (fd.Film,
 	catetory, err := h.categoryRepository.FindByID(command.CategoryID)
 	if err != nil {
 		return fd.Film{}, err
+	}
+
+	if catetory.ID == uuid.Nil {
+		return fd.Film{}, errors.New("category not found")
 	}
 
 	film, err := h.filmRepository.FindByID(command.FilmID)
