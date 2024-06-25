@@ -69,10 +69,10 @@ func (r *DynamoDBFilmRepository) FindByID(id uuid.UUID) (domain.Film, error) {
 	}
 	result, err := r.db.GetItem(input)
 	if err != nil {
-        return domain.Film{}, err
+		return domain.Film{}, err
 	}
 	if result.Item == nil {
-        return domain.Film{}, errors.New("film not found")
+		return domain.Film{}, errors.New("film not found")
 	}
 	var df dynamoFilm
 	err = dynamodbattribute.UnmarshalMap(result.Item, &df)
@@ -82,31 +82,31 @@ func (r *DynamoDBFilmRepository) FindByID(id uuid.UUID) (domain.Film, error) {
 	return *toFilm(&df), nil
 }
 
-func  (r *DynamoDBFilmRepository) Update(film *domain.Film) (domain.Film, error) {
-    av, err := dynamodbattribute.MarshalMap(toDynamoFilm(film))
-    if err != nil {
-        return domain.Film{}, err
-    }
-    input := &dynamodb.PutItemInput{
-        TableName: &r.tableName,
-        Item:      av,
-    }
-    _, err = r.db.PutItem(input)
-    if err != nil {
-        return domain.Film{}, err
-    }
-    return *film, nil
+func (r *DynamoDBFilmRepository) Update(film *domain.Film) (domain.Film, error) {
+	av, err := dynamodbattribute.MarshalMap(toDynamoFilm(film))
+	if err != nil {
+		return domain.Film{}, err
+	}
+	input := &dynamodb.PutItemInput{
+		TableName: &r.tableName,
+		Item:      av,
+	}
+	_, err = r.db.PutItem(input)
+	if err != nil {
+		return domain.Film{}, err
+	}
+	return *film, nil
 }
 
 func (r *DynamoDBFilmRepository) Delete(id uuid.UUID) error {
-    input := &dynamodb.DeleteItemInput{
-        TableName: &r.tableName,
-        Key: map[string]*dynamodb.AttributeValue{
-            "id": {
-                S: aws.String(id.String()),
-            },
-        },
-    }
-    _, err := r.db.DeleteItem(input)
-    return err
+	input := &dynamodb.DeleteItemInput{
+		TableName: &r.tableName,
+		Key: map[string]*dynamodb.AttributeValue{
+			"id": {
+				S: aws.String(id.String()),
+			},
+		},
+	}
+	_, err := r.db.DeleteItem(input)
+	return err
 }

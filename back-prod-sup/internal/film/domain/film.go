@@ -8,14 +8,15 @@ import (
 )
 
 type Film struct {
-	ReleaseDate time.Time `json:"release_date"`
-	CreatedAt   time.Time `json:"created_at"`
-	UpdatedAt   time.Time `json:"updated_at"`
-	Name        string    `json:"name"`
-	Description string    `json:"description"`
-	Author      string    `json:"author"`
-	Duration    uint16    `json:"duration"`
-	ID          uuid.UUID `json:"id"`
+	ReleaseDate time.Time  `json:"release_date"`
+	CreatedAt   time.Time  `json:"created_at"`
+	UpdatedAt   time.Time  `json:"updated_at"`
+	CategoryID  *uuid.UUID `json:"category_id,omitempty"`
+	Name        string     `json:"name"`
+	Description string     `json:"description"`
+	Author      string     `json:"author"`
+	Duration    uint16     `json:"duration"`
+	ID          uuid.UUID  `json:"id"`
 }
 
 func NewFilm(name string, description string, duration uint16, releaseDate time.Time, author string) *Film {
@@ -46,6 +47,10 @@ func (f *Film) Update(name *string, description *string, duration *uint16, relea
 		f.ReleaseDate = *releaseDate
 	}
 	f.UpdatedAt = time.Now()
+}
+
+func (f *Film) SetCategoryID(categoryID uuid.UUID) {
+    f.CategoryID = &categoryID
 }
 
 func (f *Film) Validate() error {

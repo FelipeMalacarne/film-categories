@@ -7,5 +7,5 @@ type FilmRepository interface {
 	FindAll() ([]Film, error)
 	FindByID(id uuid.UUID) (Film, error)
 	Update(film *Film) (Film, error)
-    Delete(id uuid.UUID) error
+	Delete(id uuid.UUID) error
 }
