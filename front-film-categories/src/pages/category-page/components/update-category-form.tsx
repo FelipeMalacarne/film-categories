@@ -66,7 +66,7 @@ export function UpdateCategoryForm({ onClose, onRefresh, id, name }: UpdateCateg
 
         <div className="flex justify-between">
           <Button type="button" variant="ghost" onClick={onClose}>Close</Button>
-          <Button type="submit">Create</Button>
+          <Button type="submit">Update</Button>
         </div>
       </form>
     </Form>
