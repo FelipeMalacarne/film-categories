@@ -33,7 +33,7 @@ func NewFilm(name string, description string, duration uint16, releaseDate time.
 	}
 }
 
-func (f *Film) Update(name *string, description *string, duration *uint16, releaseDate *time.Time) {
+func (f *Film) Update(name *string, description *string, duration *uint16, releaseDate *time.Time, Author *string){
 	if name != nil {
 		f.Name = *name
 	}
@@ -46,6 +46,9 @@ func (f *Film) Update(name *string, description *string, duration *uint16, relea
 	if releaseDate != nil {
 		f.ReleaseDate = *releaseDate
 	}
+    if Author != nil {
+        f.Author = *Author
+    }
 	f.UpdatedAt = time.Now()
 }
 
