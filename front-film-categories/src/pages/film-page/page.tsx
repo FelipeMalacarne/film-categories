@@ -53,6 +53,7 @@ export default function FilmPage() {
                         <TableHead className="hidden lg:table-cell max-h-[100px]">Description</TableHead>
                         <TableHead>Duration</TableHead>
                         <TableHead>Release Date</TableHead>
+                        <TableHead>Category</TableHead>
                         <TableHead>Created At</TableHead>
                         <TableHead className="text-left">Actions</TableHead>
                     </TableRow>
@@ -76,6 +77,7 @@ export default function FilmPage() {
                                     day: 'numeric'
                                 }
                                 )}</TableCell>
+                                <TableCell>{film.category?.name}</TableCell>
                                 <TableCell>{new Date(film.created_at).toLocaleString('pt-BR')}</TableCell>
                                 <TableCell className="text-left flex items-center">
                                     <PopUpDialog

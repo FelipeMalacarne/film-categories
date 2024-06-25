@@ -4,7 +4,7 @@ export interface Film {
     author: string;
     description: string;
     duration: number;
-    category: Category;
+    category?: Category;
     release_date: Date;
     created_at: Date;
     updated_at: Date;

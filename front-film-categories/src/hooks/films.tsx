@@ -82,5 +82,25 @@ export const useFilms = () => {
     }
   }
 
-  return { films, isLoading, getFilms, createFilm, deleteFilm, updateFilm }
+  const updateFilmCategory = async (id: string, categoryId: string) => {
+    try {
+      setIsLoading(true);
+      const response = await axios.patch<Film>(BaseURL + "/film/" + id + "/category", { category_id: categoryId });
+      setFilms(films.map((f) => (f.id === id ? response.data : f)));
+      toast({
+        title: "Film updated succesfully",
+        description: "The film was updated successfully",
+      });
+    } catch (error: any) {
+      toast({
+        title: "Error updating film",
+        description: error.response.data.message,
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  return { films, isLoading, getFilms, createFilm, deleteFilm, updateFilm, updateFilmCategory }
 };
