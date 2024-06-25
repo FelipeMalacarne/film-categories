@@ -66,7 +66,9 @@ export default function FilmPage() {
                                 <TableCell className="hidden lg:table-cell max-h-[100px]">
                                     {film.description}
                                 </TableCell>
-                                <TableCell>{film.duration}</TableCell>
+                                <TableCell>
+                                    {film.duration + " min"}
+                                </TableCell>
                                 <TableCell>{new Date(film.release_date).toLocaleString('en-US', {
                                     year: 'numeric',
                                     month: 'long',
