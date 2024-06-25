@@ -27,7 +27,7 @@ export default function CategoriesPage() {
   return (
     <div className="space-y-8 flex flex-col">
       <div className="p-8 flex items-center">
-        <h1 className="p-4 text-2xl font-semibold border-b">Categories</h1>
+        <h1 className="text-2xl font-semibold border-b mr-4">Categories</h1>
         <PopUpDialog
           isOpen={isCreateDialogOpen}
           onOpenChange={setIsCreateDialogOpen}
@@ -37,12 +37,12 @@ export default function CategoriesPage() {
         />
       </div>
       <div className="flex items-center justify-center">
-        <div className="w-full max-w-screen-md mx-auto">
+        <div className="w-full max-w-screen-sm mx-auto">
           <Table className="w-full">
             <TableHeader>
               <TableRow>
                 <TableHead>Name</TableHead>
-                <TableHead>Actions</TableHead>
+                <TableHead className="text-left">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -50,35 +50,34 @@ export default function CategoriesPage() {
                 categories.map((category) => (
                   <TableRow key={category.id}>
                     <TableCell>{category.name}</TableCell>
-                    <TableCell>
-                      <div className="flex space-x-2">
-                        <PopUpDialog
-                          isOpen={openDialogs[category.id] || false}
-                          onOpenChange={(isOpen) => setIsUpdateDialogOpen(category.id, isOpen)}
-                          title="Edit category"
-                          text="Edit"
-                          FormComponent={
-                            <UpdateCategoryForm
-                              onClose={() => setIsUpdateDialogOpen(category.id, false)}
-                              onRefresh={getCategories}
-                              id={category.id}
-                              name={category.name}
-                            />
-                          }
-                        />
-                        <Button
-                          variant="destructive"
-                          onClick={() => deleteCategory(category.id)}
-                        >
-                          Delete
-                        </Button>
-                      </div>
+                    <TableCell className="text-left">
+                      <PopUpDialog
+                        isOpen={openDialogs[category.id] || false}
+                        onOpenChange={(isOpen) => setIsUpdateDialogOpen(category.id, isOpen)}
+                        title="Edit category"
+                        text="Edit"
+                        FormComponent={
+                          <UpdateCategoryForm
+                            onClose={() => setIsUpdateDialogOpen(category.id, false)}
+                            onRefresh={getCategories}
+                            id={category.id}
+                            name={category.name}
+                          />
+                        }
+                      />
+                      <Button
+                        variant="destructive"
+                        onClick={() => deleteCategory(category.id)}
+                        className="ml-2"
+                      >
+                        Delete
+                      </Button>
                     </TableCell>
                   </TableRow>
                 ))
               ) : (
                 <TableRow>
-                  <TableCell colSpan={4}>Loading...</TableCell>
+                  <TableCell colSpan={2}>Loading...</TableCell>
                 </TableRow>
               )}
             </TableBody>

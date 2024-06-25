@@ -19,7 +19,7 @@ const PopUpDialog: React.FC<PopUpDialogProps> = ({
 }) => {
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogTrigger asChild className="ml-4">
+      <DialogTrigger asChild>
         <Button variant="default">{text}</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
