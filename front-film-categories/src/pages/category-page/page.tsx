@@ -1,38 +1,40 @@
 import { useState } from "react";
 import { useCategories } from "../../hooks/categories";
 import { Button } from "../../components/ui/button";
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "../../components/ui/dialog";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../components/ui/table";
 import { AddCategoryForm } from "./components/add-category-form";
+import { UpdateCategoryForm } from "./components/update-category-form";
+import PopUpDialog from "../../components/pop-up-dialog";
+
+type OpenDialogs = {
+  [key: string]: boolean;
+};
 
 export default function CategoriesPage() {
   const { categories, deleteCategory, getCategories } = useCategories();
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
+  const [openDialogs, setOpenDialogs] = useState<OpenDialogs>({});
 
-  const handleDialogClose = () => {
-    setIsDialogOpen(false);
+  const setIsUpdateDialogOpen = (id: string, isOpen: boolean) => {
+    setOpenDialogs((prev) => ({ ...prev, [id]: isOpen }));
+  };
+
+
+  const handleCreateDialogClose = () => {
+    setIsCreateDialogOpen(false);
   };
 
   return (
     <div className="space-y-8 flex flex-col">
       <div className="p-8 flex items-center">
         <h1 className="p-4 text-2xl font-semibold border-b">Categories</h1>
-        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogTrigger asChild className=" ml-4">
-            <Button variant="default">Add</Button>
-          </DialogTrigger>
-          <DialogContent className="sm:max-w-[425px]">
-            <DialogHeader>
-              <DialogTitle>Add category</DialogTitle>
-            </DialogHeader>
-            <DialogContent>
-              <AddCategoryForm onClose={handleDialogClose} onRefresh={getCategories} />
-            </DialogContent>
-            <DialogFooter>
-              <Button type="submit" form="add-category-form">Save changes</Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
+        <PopUpDialog
+          isOpen={isCreateDialogOpen}
+          onOpenChange={setIsCreateDialogOpen}
+          title="Add category"
+          text="Add"
+          FormComponent={<AddCategoryForm onClose={handleCreateDialogClose} onRefresh={getCategories} />}
+        />
       </div>
       <div className="flex items-center justify-center">
         <div className="w-full max-w-screen-md mx-auto">
@@ -49,19 +51,28 @@ export default function CategoriesPage() {
                   <TableRow key={category.id}>
                     <TableCell>{category.name}</TableCell>
                     <TableCell>
-                      <Button
-                        className="mr-2"
-                        variant="outline"
-                        onClick={() => { }}
-                      >
-                        Editar
-                      </Button>
-                      <Button
-                        variant="destructive"
-                        onClick={() => deleteCategory(category.id)}
-                      >
-                        Excluir
-                      </Button>
+                      <div className="flex space-x-2">
+                        <PopUpDialog
+                          isOpen={openDialogs[category.id] || false}
+                          onOpenChange={(isOpen) => setIsUpdateDialogOpen(category.id, isOpen)}
+                          title="Edit category"
+                          text="Edit"
+                          FormComponent={
+                            <UpdateCategoryForm
+                              onClose={() => setIsUpdateDialogOpen(category.id, false)}
+                              onRefresh={getCategories}
+                              id={category.id}
+                              name={category.name}
+                            />
+                          }
+                        />
+                        <Button
+                          variant="destructive"
+                          onClick={() => deleteCategory(category.id)}
+                        >
+                          Delete
+                        </Button>
+                      </div>
                     </TableCell>
                   </TableRow>
                 ))

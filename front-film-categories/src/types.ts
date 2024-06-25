@@ -24,3 +24,8 @@ export interface Supplier {
   created_at: Date;
   updated_at: Date;
 }
+
+export interface BaseFormProps {
+  onClose: () => void;
+  onRefresh: () => void;
+}

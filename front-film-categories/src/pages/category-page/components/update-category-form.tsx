@@ -15,6 +15,11 @@ import {
   FormMessage,
 } from "../../../components/ui/form"
 
+interface UpdateCategoryFormProps extends BaseFormProps {
+  id: string;
+  name: string;
+}
+
 const formSchema = z.object({
   name: z.string().min(1, {
     message: "Name is required",
@@ -23,18 +28,18 @@ const formSchema = z.object({
   }),
 })
 
-export function AddCategoryForm({ onClose, onRefresh }: BaseFormProps) {
-  const { createCategory } = useCategories();
+export function UpdateCategoryForm({ onClose, onRefresh, id, name }: UpdateCategoryFormProps) {
+  const { updateCategory } = useCategories();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
+      name: name,
     },
   })
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    await createCategory(values);
+    await updateCategory(id, values);
     onRefresh();
     if (onClose) { onClose() }
   }
@@ -49,7 +54,7 @@ export function AddCategoryForm({ onClose, onRefresh }: BaseFormProps) {
             <FormItem>
               <FormLabel>Name</FormLabel>
               <FormControl>
-                <Input placeholder="" {...field} />
+                <Input placeholder={name}{...field} />
               </FormControl>
               <FormDescription>
                 Category name.
@@ -58,8 +63,9 @@ export function AddCategoryForm({ onClose, onRefresh }: BaseFormProps) {
             </FormItem>
           )}
         />
+
         <div className="flex justify-between">
-          <Button type="button" variant="ghost" onClick={ onClose }>Close</Button>
+          <Button type="button" variant="ghost" onClick={onClose}>Close</Button>
           <Button type="submit">Create</Button>
         </div>
       </form>
