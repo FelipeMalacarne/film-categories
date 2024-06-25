@@ -8,8 +8,9 @@ import (
 	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
+	cp "github.com/felipemalacarne/back-prod-sup/internal/category/infrastructure/persistence"
 	"github.com/felipemalacarne/back-prod-sup/internal/film/application/queries"
-	"github.com/felipemalacarne/back-prod-sup/internal/film/infrastructure/persistence"
+	fp "github.com/felipemalacarne/back-prod-sup/internal/film/infrastructure/persistence"
 	"github.com/felipemalacarne/back-prod-sup/utils"
 )
 
@@ -19,8 +20,9 @@ func main() {
 
 		db := dynamodb.New(session.Must(session.NewSession()))
 
-		filmRepository := persistence.NewDynamoDBFilmRepository(db, "films")
-		listFilmsHandler := queries.NewListFilmsHandler(filmRepository)
+		filmRepository := fp.NewDynamoDBFilmRepository(db, "films")
+		categoryRepository := cp.NewDynamoDBCategoryRepository(db, "categories")
+		listFilmsHandler := queries.NewListFilmsHandler(filmRepository, categoryRepository)
 
 		films, err := listFilmsHandler.Handle(query)
 		if err != nil {
