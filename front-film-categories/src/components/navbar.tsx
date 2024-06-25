@@ -1,44 +1,36 @@
 import { Link } from "react-router-dom";
 import { cn } from "../lib/utils";
-import { buttonVariants } from "./ui/button";
+import { Package2 } from "lucide-react";
+import { useState } from "react";
 
 export const Navbar = () => {
-  return (
-    <nav className="border-b">
-      <div className="flex items-center h-16 px-4 space-x-8">
-        <div>
-          {/* <img src={logo} alt="logo" /> */}
-          <h1>Caralho Films</h1>
-        </div>
-        <div>
-          <ul className="flex items-center space-x-4 ml-auto">
-            <li>
-              <Link
-                className={cn(buttonVariants({ variant: "ghost" }))}
-                to="/suppliers"
-              >
-                Suppliers
-              </Link>
-            </li>
-            <li>
-              <Link
-                className={cn(buttonVariants({ variant: "ghost" }))}
-                to="/films"
-              >
-                Films
-              </Link>
-            </li>
-            <li>
-              <Link
-                className={cn(buttonVariants({ variant: "ghost" }))}
-                to="/categories"
-              >
-                Categories
-              </Link>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </nav>
-  );
+    const [pathName, setPathName] = useState<string>(window.location.pathname);
+
+    return (
+        <header className="sticky top-0 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6">
+            <nav className="hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6">
+                <Link
+                    to="#"
+                    className="flex items-center gap-2 text-lg font-semibold md:text-base"
+                >
+                    <Package2 className="h-6 w-6" />
+                    <span className="sr-only">Filmes</span>
+                </Link>
+                <Link
+                    to="/films"
+                    className={cn("transition-colors hover:text-foreground", pathName === "/films" ? "text-foreground" : "text-muted-foreground")}
+                    onClick={() => setPathName("/films")}
+                >
+                    Films
+                </Link>
+                <Link
+                    to="/categories"
+                    className={cn("transition-colors hover:text-foreground", pathName === "/categories" ? "text-foreground" : "text-muted-foreground")}
+                    onClick={() => setPathName("/categories")}
+                >
+                    Categories
+                </Link>
+            </nav>
+        </header>
+    );
 };
