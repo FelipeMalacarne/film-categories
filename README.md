@@ -6,8 +6,6 @@
 ![Bitbucket open issues](https://img.shields.io/bitbucket/issues/felipemalacarne/film-categories?style=for-the-badge)
 ![Bitbucket open pull requests](https://img.shields.io/bitbucket/pr-raw/felipemalacarne/film-categories?style=for-the-badge)
 
-<img src="images/front.png" alt="Exemplo imagem">
-
 Aplicação Web para a atividade final da disciplina de programação Web. CRUD de Filmes e Categorias, Backend em Go, FrontEnd em react, banco de dados DynamoDB 
 
 ## Arquitetura
