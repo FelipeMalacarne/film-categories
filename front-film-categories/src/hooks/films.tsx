@@ -85,7 +85,7 @@ export const useFilms = () => {
   const updateFilmCategory = async (id: string, categoryId: string) => {
     try {
       setIsLoading(true);
-      const response = await axios.patch<Film>(BaseURL + "/film/" + id + "/category", { category_id: categoryId });
+      const response = await axios.put<Film>(BaseURL + "/z/film/" + id + "/category/" + categoryId);
       setFilms(films.map((f) => (f.id === id ? response.data : f)));
       toast({
         title: "Film updated succesfully",
