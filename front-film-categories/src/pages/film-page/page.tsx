@@ -3,22 +3,22 @@ import { useFilms } from "../../hooks/films";
 import { Button } from "../../components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../components/ui/table";
 import { AddFilmForm } from "./components/add-film-form";
-// import { UpdateFilmForm } from "./components/update-film-form";
+import { UpdateFilmForm } from "./components/update-film-form";
 import PopUpDialog from "../../components/pop-up-dialog";
 import { Skeleton } from "../../components/ui/skeleton";
 
-// type OpenDialogs = {
-//   [key: string]: boolean;
-// };
+type OpenDialogs = {
+    [key: string]: boolean;
+};
 
 export default function FilmPage() {
     const { films, isLoading, deleteFilm, getFilms } = useFilms();
     const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
-    // const [openDialogs, setOpenDialogs] = useState<OpenDialogs>({});
+    const [openDialogs, setOpenDialogs] = useState<OpenDialogs>({});
 
-    // const setIsUpdateDialogOpen = (id: string, isOpen: boolean) => {
-    //   setOpenDialogs((prev) => ({ ...prev, [id]: isOpen }));
-    // };
+    const setIsUpdateDialogOpen = (id: string, isOpen: boolean) => {
+        setOpenDialogs((prev) => ({ ...prev, [id]: isOpen }));
+    };
 
 
     const handleCreateDialogClose = () => {
@@ -77,12 +77,24 @@ export default function FilmPage() {
                                 )}</TableCell>
                                 <TableCell>{new Date(film.created_at).toLocaleString('pt-BR')}</TableCell>
                                 <TableCell className="text-left">
-                                    <Button
-                                        variant="default"
-                                        className="ml-2"
-                                    >
-                                        Update
-                                    </Button>
+                                    <PopUpDialog
+                                        isOpen={openDialogs[film.id] || false}
+                                        onOpenChange={(isOpen) => setIsUpdateDialogOpen(film.id, isOpen)}
+                                        title="Update Film"
+                                        text="Update"
+                                        FormComponent={
+                                            <UpdateFilmForm
+                                                onClose={() => setIsUpdateDialogOpen(film.id, false)}
+                                                onRefresh={getFilms}
+                                                id={film.id}
+                                                name={film.name}
+                                                author={film.author}
+                                                description={film.description}
+                                                duration={film.duration}
+                                                release_date={film.release_date}
+                                            />
+                                        }
+                                    />
                                     <Button
                                         variant="destructive"
                                         onClick={() => deleteFilm(film.id)}
