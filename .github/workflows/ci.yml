@@ -1,27 +1,33 @@
 name: Node.js CI
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   # Actions run on Pull Requests are used to run test suites
   # to ensure no broken code is merged to main!
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
-    - uses: actions/setup-node@v3
-      with:
-        cache: 'npm'
+      - uses: actions/checkout@v3
 
-    - name: Change to the front directory
-      run: cd front-film-categories
+      - name: Change to the front directory
+        run: cd front-film-categories
 
-    - name: Build React app
-      run: npm run build
-    
-    - name: Sync s3 bucket
-      run: npm run deploy
-      env:
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }} 
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        AWS_DEFAULT_REGION: "us-west-2"
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'  # Optionally specify the node version
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build React app
+        run: npm run build
+
+      - name: Sync S3 bucket
+        run: npm run deploy
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: "sa-east-1"
