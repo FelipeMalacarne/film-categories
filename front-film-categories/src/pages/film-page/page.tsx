@@ -6,6 +6,7 @@ import { AddFilmForm } from "./components/add-film-form";
 import { UpdateFilmForm } from "./components/update-film-form";
 import PopUpDialog from "../../components/pop-up-dialog";
 import { Skeleton } from "../../components/ui/skeleton";
+import { SquarePen, Trash2 } from "lucide-react";
 
 type OpenDialogs = {
     [key: string]: boolean;
@@ -76,12 +77,12 @@ export default function FilmPage() {
                                 }
                                 )}</TableCell>
                                 <TableCell>{new Date(film.created_at).toLocaleString('pt-BR')}</TableCell>
-                                <TableCell className="text-left">
+                                <TableCell className="text-left flex items-center">
                                     <PopUpDialog
                                         isOpen={openDialogs[film.id] || false}
                                         onOpenChange={(isOpen) => setIsUpdateDialogOpen(film.id, isOpen)}
                                         title="Update Film"
-                                        text="Update"
+                                        text=<SquarePen/>
                                         FormComponent={
                                             <UpdateFilmForm
                                                 onClose={() => setIsUpdateDialogOpen(film.id, false)}
@@ -100,7 +101,7 @@ export default function FilmPage() {
                                         onClick={() => deleteFilm(film.id)}
                                         className="ml-2"
                                     >
-                                        Delete
+                                        <Trash2/>
                                     </Button>
                                 </TableCell>
                             </TableRow>

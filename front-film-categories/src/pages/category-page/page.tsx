@@ -5,6 +5,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from ".
 import { AddCategoryForm } from "./components/add-category-form";
 import { UpdateCategoryForm } from "./components/update-category-form";
 import PopUpDialog from "../../components/pop-up-dialog";
+import { SquarePen, Trash2 } from "lucide-react";
 
 type OpenDialogs = {
     [key: string]: boolean;
@@ -61,7 +62,7 @@ export default function CategoriesPage() {
                                         isOpen={openDialogs[category.id] || false}
                                         onOpenChange={(isOpen) => setIsUpdateDialogOpen(category.id, isOpen)}
                                         title="Update category"
-                                        text="Update"
+                                        text=<SquarePen/>
                                         FormComponent={
                                             <UpdateCategoryForm
                                                 onClose={() => setIsUpdateDialogOpen(category.id, false)}
@@ -76,7 +77,7 @@ export default function CategoriesPage() {
                                         onClick={() => deleteCategory(category.id)}
                                         className="ml-2"
                                     >
-                                        Delete
+                                        <Trash2/>
                                     </Button>
                                 </TableCell>
                             </TableRow>

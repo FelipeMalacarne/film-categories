@@ -6,7 +6,7 @@ interface PopUpDialogProps {
   onOpenChange: (isOpen: boolean) => void;
   isOpen: boolean;
   title: string;
-  text: string;
+  text: any;
   FormComponent: React.ReactElement;
 }
 
