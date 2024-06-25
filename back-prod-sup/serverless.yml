@@ -111,7 +111,7 @@ functions:
           path: /film/{id}
           method: delete
 
-  ## ---------- Films ----------
+  ## ---------- Categories ----------
 
   create-category:
     handler: bootstrap
