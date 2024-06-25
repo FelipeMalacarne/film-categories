@@ -13,6 +13,7 @@ type UpdateFilmCommand struct {
 	Description *string    `json:"description"`
 	Duration    *uint16    `json:"duration"`
 	ID          uuid.UUID  `json:"id"`
+    Author     *string    `json:"author"`
 }
 
 type UpdateFilmHandler struct {
@@ -29,7 +30,7 @@ func (h UpdateFilmHandler) Handle(command UpdateFilmCommand) (domain.Film, error
 		return domain.Film{}, err
 	}
 
-	film.Update(command.Name, command.Description, command.Duration, command.ReleaseDate)
+	film.Update(command.Name, command.Description, command.Duration, command.ReleaseDate, command.Author)
 
 	err = film.Validate()
 	if err != nil {
