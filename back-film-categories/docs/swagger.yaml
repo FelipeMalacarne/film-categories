@@ -1,0 +1,452 @@
+openapi: 3.0.0
+info:
+  title: Film and Category API
+  description: API for managing films and their categories.
+  version: "1.0.0"
+servers:
+  - url: https://fmjn8at5gj.execute-api.sa-east-1.amazonaws.com
+    description: API Gateway
+
+paths:
+  # Film endpoints
+  /film:
+    get:
+      tags:
+        - Films
+      summary: Retrieve all films
+      responses:
+        "200":
+          description: A list of films
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/FilmResponse"
+        "400":
+          description: Bad Request Message
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+
+        "500":
+          description: Error Message
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+    post:
+      tags:
+        - Films
+      summary: Create a new film
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FilmRequest"
+      responses:
+        "200":
+          description: Film created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Film"
+        "400":
+          description: Bad Request Message
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+
+        "500":
+          description: Error Message
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+
+  /film/{id}:
+    get:
+      tags:
+        - Films
+      summary: Retrieve a film by ID
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+      responses:
+        "200":
+          description: Film found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/FilmResponse"
+        "400":
+          description: Bad Request Message
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+
+        "500":
+          description: Error Message
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+    put:
+      tags:
+        - Films
+      summary: Update a film
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Film"
+      responses:
+        "200":
+          description: Film updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Film"
+        "400":
+          description: Bad Request Message
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+
+        "500":
+          description: Error Message
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+    delete:
+      tags:
+        - Films
+      summary: Delete a film
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+      responses:
+        "204":
+          description: Film deleted
+        "400":
+          description: Bad Request Message
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+
+        "500":
+          description: Error Message
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+  /film/{id}/category/{category_id}:
+    patch:
+      tags:
+        - Films
+      summary: Update the category of a film
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            format: uuid
+          required: true
+        - in: path
+          name: category_id
+          schema:
+            type: string
+            format: uuid
+          required: true
+      responses:
+        "200":
+          description: Film's category updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Film"
+        "404":
+          description: Film or category not found
+        "400":
+          description: Invalid input data
+
+  # Category endpoints
+  /category:
+    get:
+      tags:
+        - Categories
+      summary: Retrieve all categories
+      responses:
+        "200":
+          description: A list of categories
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Category"
+        "400":
+          description: Bad Request Message
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+
+        "500":
+          description: Error Message
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+    post:
+      tags:
+        - Categories
+      summary: Create a new category
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CategoryRequest"
+      responses:
+        "200":
+          description: Category created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Category"
+        "400":
+          description: Bad Request Message
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+
+        "500":
+          description: Error Message
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+  /category/{id}:
+    get:
+      tags:
+        - Categories
+      summary: Retrieve a category by ID
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+      responses:
+        "200":
+          description: Category found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Category"
+        "400":
+          description: Bad Request Message
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+
+        "500":
+          description: Error Message
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+    put:
+      tags:
+        - Categories
+      summary: Update a category
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CategoryRequest"
+      responses:
+        "200":
+          description: Category updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Category"
+        "400":
+          description: Bad Request Message
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+
+        "500":
+          description: Error Message
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+    delete:
+      tags:
+        - Categories
+      summary: Delete a category
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+      responses:
+        "204":
+          description: Category deleted
+        "400":
+          description: Bad Request Message
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+
+        "500":
+          description: Error Message
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+
+components:
+  schemas:
+    Category:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    CategoryRequest:
+      type: object
+      properties:
+        name:
+          type: string
+
+    FilmRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        author:
+          type: string
+        duration:
+          type: integer
+        releaseDate:
+          type: string
+          format: date-time
+
+    Film:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+        author:
+          type: string
+        duration:
+          type: integer
+        releaseDate:
+          type: string
+          format: date-time
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        categoryID:
+          type: string
+          format: uuid
+
+    FilmResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+        author:
+          type: string
+        duration:
+          type: integer
+        releaseDate:
+          type: string
+          format: date-time
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        category:
+          type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+            name:
+              type: string
+            createdAt:
+              type: string
+              format: date-time
+            updatedAt:
+              type: string
+              format: date-time
+    ApiError:
+      type: object
+      properties:
+        message:
+          type: string
