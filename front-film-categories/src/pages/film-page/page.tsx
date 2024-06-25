@@ -1,44 +1,55 @@
+import { useState } from "react";
 import { useFilms } from "../../hooks/films";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "../../components/ui/table";
 import { Button } from "../../components/ui/button";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../components/ui/table";
+import { AddFilmForm } from "./components/add-film-form";
+// import { UpdateFilmForm } from "./components/update-film-form";
+import PopUpDialog from "../../components/pop-up-dialog";
+
+// type OpenDialogs = {
+//   [key: string]: boolean;
+// };
 
 export default function FilmPage() {
-  const { films, createFilm, updateFilm, deleteFilm } = useFilms();
+  const { films, deleteFilm, getFilms } = useFilms();
+  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
+  // const [openDialogs, setOpenDialogs] = useState<OpenDialogs>({});
+
+  // const setIsUpdateDialogOpen = (id: string, isOpen: boolean) => {
+  //   setOpenDialogs((prev) => ({ ...prev, [id]: isOpen }));
+  // };
+
+
+  const handleCreateDialogClose = () => {
+    setIsCreateDialogOpen(false);
+  };
 
   return (
     <div className="space-y-8 flex flex-col">
-      <div className="p-8">
-        <h1 className="p-4 text-2xl font-semibold border-b">Filmes</h1>
-        {/* <Button
-          variant={"outline"}
-          onClick={() =>
-            createFilm({
-              name: "Filme 1",
-              duration: 120,
-              release_date: new Date(),
-            })
+      <div className="p-8 flex items-center">
+        <h1 className="text-2xl font-semibold border-b mr-4">Categories</h1>
+        <PopUpDialog
+          isOpen={isCreateDialogOpen}
+          onOpenChange={setIsCreateDialogOpen}
+          title="Add category"
+          text="Add"
+          FormComponent={
+            <AddFilmForm
+              onClose={handleCreateDialogClose}
+              onRefresh={getFilms}
+            />
           }
-        >
-          Criar
-        </Button> */}
+        />
       </div>
       <div className="flex items-center justify-center">
-        <div className="w-full max-w-screen-md mx-auto">
+        <div className="w-full max-w-screen-sm mx-auto">
           <Table className="w-full">
             <TableHeader>
               <TableRow>
                 <TableHead>Name</TableHead>
-                <TableHead>Author</TableHead>
-                <TableHead>Release Date</TableHead>
-                <TableHead>Duration</TableHead>
-                <TableHead>Actions</TableHead>
+                <TableHead>Email</TableHead>
+                <TableHead>Phone</TableHead>
+                <TableHead className="text-left">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -47,29 +58,38 @@ export default function FilmPage() {
                   <TableRow key={film.id}>
                     <TableCell>{film.name}</TableCell>
                     <TableCell>{film.author}</TableCell>
-                    <TableCell>{film.release_date.toLocaleString()}</TableCell>
+                    <TableCell>{film.description}</TableCell>
                     <TableCell>{film.duration}</TableCell>
-                    {/* seria uma boa ideia botar svg aq */}
-                    <TableCell>
-                      <Button
-                        className="mr-2"
-                        variant="outline"
-                        onClick={() => { }}
-                      >
-                        Editar
-                      </Button>
+                    <TableCell className="text-left">
+                      {/* <PopUpDialog
+                        isOpen={openDialogs[supplier.id] || false}
+                        onOpenChange={(isOpen) => setIsUpdateDialogOpen(supplier.id, isOpen)}
+                        title="Edit category"
+                        text="Edit"
+                        FormComponent={
+                          <UpdateSupplierForm
+                            onClose={() => setIsUpdateDialogOpen(supplier.id, false)}
+                            onRefresh={getSuppliers}
+                            id={supplier.id}
+                            name={supplier.name}
+                            email={supplier.email}
+                            phone={supplier.phone}
+                          />
+                        }
+                      /> */}
                       <Button
                         variant="destructive"
                         onClick={() => deleteFilm(film.id)}
+                        className="ml-2"
                       >
-                        Excluir
+                        Delete
                       </Button>
                     </TableCell>
                   </TableRow>
                 ))
               ) : (
                 <TableRow>
-                  <TableCell colSpan={4}>Loading...</TableCell>
+                  <TableCell colSpan={2}>Loading...</TableCell>
                 </TableRow>
               )}
             </TableBody>
@@ -78,5 +98,4 @@ export default function FilmPage() {
       </div>
     </div>
   );
-
 }

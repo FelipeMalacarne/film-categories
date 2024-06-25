@@ -33,7 +33,7 @@ export const Navbar = () => {
                 className={cn(buttonVariants({ variant: "ghost" }))}
                 to="/categories"
               >
-                Suppliers
+                Categories
               </Link>
             </li>
           </ul>

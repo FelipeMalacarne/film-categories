@@ -82,5 +82,5 @@ export const useFilms = () => {
     }
   }
 
-  return { films, isLoading, createFilm, deleteFilm, updateFilm }
+  return { films, isLoading, getFilms, createFilm, deleteFilm, updateFilm }
 };
