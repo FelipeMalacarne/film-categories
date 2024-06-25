@@ -5,97 +5,113 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from ".
 import { AddFilmForm } from "./components/add-film-form";
 // import { UpdateFilmForm } from "./components/update-film-form";
 import PopUpDialog from "../../components/pop-up-dialog";
+import { Skeleton } from "../../components/ui/skeleton";
 
 // type OpenDialogs = {
 //   [key: string]: boolean;
 // };
 
 export default function FilmPage() {
-  const { films, deleteFilm, getFilms } = useFilms();
-  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
-  // const [openDialogs, setOpenDialogs] = useState<OpenDialogs>({});
+    const { films, isLoading, deleteFilm, getFilms } = useFilms();
+    const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
+    // const [openDialogs, setOpenDialogs] = useState<OpenDialogs>({});
 
-  // const setIsUpdateDialogOpen = (id: string, isOpen: boolean) => {
-  //   setOpenDialogs((prev) => ({ ...prev, [id]: isOpen }));
-  // };
+    // const setIsUpdateDialogOpen = (id: string, isOpen: boolean) => {
+    //   setOpenDialogs((prev) => ({ ...prev, [id]: isOpen }));
+    // };
 
 
-  const handleCreateDialogClose = () => {
-    setIsCreateDialogOpen(false);
-  };
+    const handleCreateDialogClose = () => {
+        setIsCreateDialogOpen(false);
+    };
 
-  return (
-    <div className="space-y-8 flex flex-col">
-      <div className="p-8 flex items-center">
-        <h1 className="text-2xl font-semibold border-b mr-4">Categories</h1>
-        <PopUpDialog
-          isOpen={isCreateDialogOpen}
-          onOpenChange={setIsCreateDialogOpen}
-          title="Add category"
-          text="Add"
-          FormComponent={
-            <AddFilmForm
-              onClose={handleCreateDialogClose}
-              onRefresh={getFilms}
-            />
-          }
-        />
-      </div>
-      <div className="flex items-center justify-center">
-        <div className="w-full max-w-screen-sm mx-auto">
-          <Table className="w-full">
-            <TableHeader>
-              <TableRow>
-                <TableHead>Name</TableHead>
-                <TableHead>Email</TableHead>
-                <TableHead>Phone</TableHead>
-                <TableHead className="text-left">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {films ? (
-                films.map((film) => (
-                  <TableRow key={film.id}>
-                    <TableCell>{film.name}</TableCell>
-                    <TableCell>{film.author}</TableCell>
-                    <TableCell>{film.description}</TableCell>
-                    <TableCell>{film.duration}</TableCell>
-                    <TableCell className="text-left">
-                      {/* <PopUpDialog
-                        isOpen={openDialogs[supplier.id] || false}
-                        onOpenChange={(isOpen) => setIsUpdateDialogOpen(supplier.id, isOpen)}
-                        title="Edit category"
-                        text="Edit"
-                        FormComponent={
-                          <UpdateSupplierForm
-                            onClose={() => setIsUpdateDialogOpen(supplier.id, false)}
-                            onRefresh={getSuppliers}
-                            id={supplier.id}
-                            name={supplier.name}
-                            email={supplier.email}
-                            phone={supplier.phone}
-                          />
-                        }
-                      /> */}
-                      <Button
-                        variant="destructive"
-                        onClick={() => deleteFilm(film.id)}
-                        className="ml-2"
-                      >
-                        Delete
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell colSpan={2}>Loading...</TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
+    return (
+        <div className="flex-1 space-y-4 p-8 pt-6">
+            <div className="flex items-center justify-between space-y-2">
+                <h2 className="text-3xl font-bold tracking-tight">Films</h2>
+
+                <PopUpDialog
+                    isOpen={isCreateDialogOpen}
+                    onOpenChange={setIsCreateDialogOpen}
+                    title="Add Film"
+                    text="Add a new Film"
+                    FormComponent={
+                        <AddFilmForm
+                            onClose={handleCreateDialogClose}
+                            onRefresh={getFilms}
+                        />
+                    }
+                />
+            </div>
+            <Table className="w-full">
+                <TableHeader>
+                    <TableRow>
+                        <TableHead className="hidden lg:table-cell">ID</TableHead>
+                        <TableHead>Name</TableHead>
+                        <TableHead>Author</TableHead>
+                        <TableHead className="hidden lg:table-cell max-h-[100px]">Description</TableHead>
+                        <TableHead>Duration</TableHead>
+                        <TableHead>Release Date</TableHead>
+                        <TableHead>Created At</TableHead>
+                        <TableHead className="text-left">Actions</TableHead>
+                    </TableRow>
+                </TableHeader>
+                <TableBody>
+                    {films && (
+                        films.map((film) => (
+                            <TableRow key={film.id}>
+                                <TableCell className="hidden lg:table-cell">{film.id}</TableCell>
+                                <TableCell>{film.name}</TableCell>
+                                <TableCell>{film.author}</TableCell>
+                                <TableCell className="hidden lg:table-cell max-h-[100px]">
+                                    {film.description}
+                                </TableCell>
+                                <TableCell>{film.duration}</TableCell>
+                                <TableCell>{new Date(film.release_date).toLocaleString('en-US', {
+                                    year: 'numeric',
+                                    month: 'long',
+                                    day: 'numeric'
+                                }
+                                )}</TableCell>
+                                <TableCell>{new Date(film.created_at).toLocaleString('pt-BR')}</TableCell>
+                                <TableCell className="text-left">
+                                    <Button
+                                        variant="default"
+                                        className="ml-2"
+                                    >
+                                        Update
+                                    </Button>
+                                    <Button
+                                        variant="destructive"
+                                        onClick={() => deleteFilm(film.id)}
+                                        className="ml-2"
+                                    >
+                                        Delete
+                                    </Button>
+                                </TableCell>
+                            </TableRow>
+                        ))
+                    )}
+                    {!films && isLoading && (
+                        <TableRow>
+                            {Array.from({ length: 8 }).map((_, index) => (
+                                <TableCell colSpan={1} key={index}>
+                                    <Skeleton className="h-4" />
+                                </TableCell>
+                            ))}
+                        </TableRow>
+                    )}
+
+                    {!films && !isLoading && (
+                        <TableRow>
+                            <TableCell colSpan={8} className="text-center">
+                                No films found
+                            </TableCell>
+                        </TableRow>
+                    )}
+
+                </TableBody>
+            </Table>
         </div>
-      </div>
-    </div>
-  );
+    );
 }
