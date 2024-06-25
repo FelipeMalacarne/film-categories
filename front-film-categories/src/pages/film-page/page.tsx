@@ -4,9 +4,10 @@ import { Button } from "../../components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../components/ui/table";
 import { AddFilmForm } from "./components/add-film-form";
 import { UpdateFilmForm } from "./components/update-film-form";
+import { UpdateFilmCategoryForm } from "./components/update-film-category-form";
 import PopUpDialog from "../../components/pop-up-dialog";
 import { Skeleton } from "../../components/ui/skeleton";
-import { SquarePen, Trash2 } from "lucide-react";
+import { SquarePen, SquarePlus, Trash2 } from "lucide-react";
 
 type OpenDialogs = {
     [key: string]: boolean;
@@ -16,11 +17,15 @@ export default function FilmPage() {
     const { films, isLoading, deleteFilm, getFilms } = useFilms();
     const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
     const [openDialogs, setOpenDialogs] = useState<OpenDialogs>({});
+    const [openCategoryDialogs, setOpenCategoryDialogs] = useState<OpenDialogs>({});
+
+    const setIsCategoryUpdateDialogOpen = (id: string, isOpen: boolean) => {
+        setOpenCategoryDialogs((prev) => ({ ...prev, [id]: isOpen }));
+    };
 
     const setIsUpdateDialogOpen = (id: string, isOpen: boolean) => {
         setOpenDialogs((prev) => ({ ...prev, [id]: isOpen }));
     };
-
 
     const handleCreateDialogClose = () => {
         setIsCreateDialogOpen(false);
@@ -49,7 +54,7 @@ export default function FilmPage() {
                     <TableRow>
                         <TableHead className="hidden lg:table-cell">ID</TableHead>
                         <TableHead>Name</TableHead>
-                        <TableHead>Author</TableHead>
+                        <TableHead>Director</TableHead>
                         <TableHead className="hidden lg:table-cell max-h-[100px]">Description</TableHead>
                         <TableHead>Duration</TableHead>
                         <TableHead>Release Date</TableHead>
@@ -79,12 +84,26 @@ export default function FilmPage() {
                                 )}</TableCell>
                                 <TableCell>{film.category?.name}</TableCell>
                                 <TableCell>{new Date(film.created_at).toLocaleString('pt-BR')}</TableCell>
-                                <TableCell className="text-left flex items-center">
+                                <TableCell className="text-left flex items-center gap-2">
+                                    <PopUpDialog
+                                        isOpen={openCategoryDialogs[film.id] || false}
+                                        onOpenChange={(isOpen) => setIsCategoryUpdateDialogOpen(film.id, isOpen)}
+                                        title="Update Category"
+                                        text={<SquarePlus />}
+                                        FormComponent={
+                                            <UpdateFilmCategoryForm
+                                                onClose={() => setIsCategoryUpdateDialogOpen(film.id, false)}
+                                                onRefresh={getFilms}
+                                                id={film.id}
+                                                categoryId={film.category?.id || ""}
+                                            />
+                                        }
+                                    />
                                     <PopUpDialog
                                         isOpen={openDialogs[film.id] || false}
                                         onOpenChange={(isOpen) => setIsUpdateDialogOpen(film.id, isOpen)}
                                         title="Update Film"
-                                        text=<SquarePen/>
+                                        text=<SquarePen />
                                         FormComponent={
                                             <UpdateFilmForm
                                                 onClose={() => setIsUpdateDialogOpen(film.id, false)}
@@ -101,9 +120,8 @@ export default function FilmPage() {
                                     <Button
                                         variant="destructive"
                                         onClick={() => deleteFilm(film.id)}
-                                        className="ml-2"
                                     >
-                                        <Trash2/>
+                                        <Trash2 />
                                     </Button>
                                 </TableCell>
                             </TableRow>
